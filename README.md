@@ -17,7 +17,7 @@ flowchart LR
         API["Express REST API"]
         WWJS["whatsapp-web.js Client"]
         PUP["Puppeteer<br/>(Chromium headless)"]
-        LOG[("logs/&lt;nomor&gt;.log")]
+        LOG[("File log per nomor")]
         API --> WWJS
         WWJS --> PUP
         API -.tulis riwayat.-> LOG
@@ -43,16 +43,16 @@ sequenceDiagram
     participant PUP as Puppeteer/Chromium
     participant WA as web.whatsapp.com
 
-    BE->>PUP: initialize()
+    BE->>PUP: initialize
     PUP->>WA: buka halaman WhatsApp Web
     WA-->>PUP: kirim QR code
-    PUP-->>BE: event "qr"
-    BE-->>FE: GET /api/status { status: "qr", qr }
+    PUP-->>BE: event qr
+    BE-->>FE: GET /api/status - status qr, kode qr
     FE-->>FE: tampilkan QR code
-    HP->>WA: scan QR (link device)
+    HP->>WA: scan QR - link device
     WA-->>PUP: sesi tertaut
-    PUP-->>BE: event "ready"
-    BE-->>FE: GET /api/status { status: "ready" }
+    PUP-->>BE: event ready
+    BE-->>FE: GET /api/status - status ready
 ```
 
 ### Alur kirim pesan
@@ -63,17 +63,17 @@ sequenceDiagram
     participant BE as Backend Express
     participant WWJS as whatsapp-web.js
     participant WA as WhatsApp Web
-    participant LOG as logs/&lt;nomor&gt;.log
+    participant LOG as File log per nomor
 
-    FE->>BE: POST /api/send { phone, message }
-    BE->>WWJS: getNumberId(phone)
+    FE->>BE: POST /api/send - phone dan message
+    BE->>WWJS: getNumberId phone
     WWJS->>WA: validasi nomor terdaftar
     WA-->>WWJS: numberId
-    BE->>WWJS: sendMessage(numberId, message)
+    BE->>WWJS: sendMessage numberId, message
     WWJS->>WA: kirim pesan
     WA-->>WWJS: terkirim
-    BE->>LOG: append [timestamp] message
-    BE-->>FE: { success: true }
+    BE->>LOG: simpan timestamp dan pesan
+    BE-->>FE: sukses
 ```
 
 ## Prasyarat

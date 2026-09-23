@@ -1,0 +1,14 @@
+{
+  "name": "wa-send",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Aplikasi kirim pesan WhatsApp (backend TypeScript + frontend Vue)",
+  "scripts": {
+    "install:all": "node scripts/install.js",
+    "build": "node scripts/build.js",
+    "start": "node scripts/start.js",
+    "stop": "node scripts/stop.js",
+    "status": "node scripts/status.js",
+    "restart": "node scripts/restart.js"
+  }
+}

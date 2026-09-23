@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.wwebjs_auth/
+.wwebjs_cache/
+*.log
+.run/
+/logs/
+backend/logs/
+*.tsbuildinfo

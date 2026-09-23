@@ -5,6 +5,77 @@
 
 Aplikasi sederhana untuk mengirim pesan WhatsApp: backend TypeScript (Express + whatsapp-web.js) dan frontend Vue 3. Berjalan di Windows maupun Linux.
 
+## Arsitektur & Topologi
+
+```mermaid
+flowchart LR
+    subgraph Browser["Browser Pengguna"]
+        FE["Frontend Vue 3<br/>localhost:5173"]
+    end
+
+    subgraph Server["Backend Node.js<br/>localhost:3001"]
+        API["Express REST API"]
+        WWJS["whatsapp-web.js Client"]
+        PUP["Puppeteer<br/>(Chromium headless)"]
+        LOG[("logs/&lt;nomor&gt;.log")]
+        API --> WWJS
+        WWJS --> PUP
+        API -.tulis riwayat.-> LOG
+    end
+
+    WA["WhatsApp Web<br/>(web.whatsapp.com)"]
+    HP["WhatsApp di HP<br/>(perangkat tertaut)"]
+
+    FE <-->|"HTTP JSON<br/>/api/status, /api/send, /api/history"| API
+    PUP <-->|"sesi browser terautomasi"| WA
+    WA <-->|"end-to-end encrypted"| HP
+```
+
+Backend tidak memakai WhatsApp Business API resmi — `whatsapp-web.js` mengontrol instance Chromium (via Puppeteer) yang membuka `web.whatsapp.com` seperti browser biasa, persis seperti saat Anda scan QR di WhatsApp Web manual.
+
+### Alur login (scan QR)
+
+```mermaid
+sequenceDiagram
+    participant HP as WhatsApp di HP
+    participant FE as Frontend Vue
+    participant BE as Backend Express
+    participant PUP as Puppeteer/Chromium
+    participant WA as web.whatsapp.com
+
+    BE->>PUP: initialize()
+    PUP->>WA: buka halaman WhatsApp Web
+    WA-->>PUP: kirim QR code
+    PUP-->>BE: event "qr"
+    BE-->>FE: GET /api/status { status: "qr", qr }
+    FE-->>FE: tampilkan QR code
+    HP->>WA: scan QR (link device)
+    WA-->>PUP: sesi tertaut
+    PUP-->>BE: event "ready"
+    BE-->>FE: GET /api/status { status: "ready" }
+```
+
+### Alur kirim pesan
+
+```mermaid
+sequenceDiagram
+    participant FE as Frontend Vue
+    participant BE as Backend Express
+    participant WWJS as whatsapp-web.js
+    participant WA as WhatsApp Web
+    participant LOG as logs/&lt;nomor&gt;.log
+
+    FE->>BE: POST /api/send { phone, message }
+    BE->>WWJS: getNumberId(phone)
+    WWJS->>WA: validasi nomor terdaftar
+    WA-->>WWJS: numberId
+    BE->>WWJS: sendMessage(numberId, message)
+    WWJS->>WA: kirim pesan
+    WA-->>WWJS: terkirim
+    BE->>LOG: append [timestamp] message
+    BE-->>FE: { success: true }
+```
+
 ## Prasyarat
 - [Node.js](https://nodejs.org) versi 18 ke atas (termasuk npm)
 - Git

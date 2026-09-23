@@ -5,14 +5,26 @@
 
 Aplikasi sederhana untuk mengirim pesan WhatsApp: backend TypeScript (Express + whatsapp-web.js) dan frontend Vue 3. Berjalan di Windows maupun Linux.
 
-## Instalasi (sekali di awal)
+## Prasyarat
+- [Node.js](https://nodejs.org) versi 18 ke atas (termasuk npm)
+- Git
+- Koneksi internet (untuk WhatsApp Web dan mengunduh Chromium saat instalasi)
+
+## 1. Clone repository
+
+```
+git clone https://github.com/seeomkus/wa-send.git
+cd wa-send
+```
+
+## 2. Instalasi dependency (sekali di awal)
 
 ```
 npm run install:all
 ```
-Perintah ini menjalankan `npm install` di folder `backend` dan `frontend` sekaligus.
+Perintah ini menjalankan `npm install` di folder `backend` dan `frontend` sekaligus. Proses ini juga akan mengunduh Chromium (dependency Puppeteer), jadi bisa memakan waktu beberapa menit tergantung koneksi internet.
 
-## Menjalankan aplikasi
+## 3. Menjalankan aplikasi
 
 | Perintah | Fungsi |
 |---|---|
@@ -30,7 +42,7 @@ Log masing-masing service tersimpan di `logs/backend.log` dan `logs/frontend.log
 
 Saat pertama kali dijalankan, buka `http://localhost:5173`, scan QR code yang muncul dengan WhatsApp di HP Anda, lalu mulai kirim pesan.
 
-## Alur kerja tanpa script (manual)
+## 4. Alur kerja tanpa script (manual)
 
 Jika lebih suka menjalankan tiap service di terminalnya sendiri (log langsung terlihat):
 
@@ -41,7 +53,7 @@ cd backend && npm run dev
 cd frontend && npm run dev
 ```
 
-## Catatan
+## 5. Catatan
 - Sesi login WhatsApp disimpan secara lokal (folder `backend/.wwebjs_auth`) sehingga tidak perlu scan ulang setiap kali backend dijalankan. Untuk logout, hapus folder ini atau unlink perangkat dari HP (WhatsApp → Perangkat Tertaut).
 - Backend membutuhkan Chromium (otomatis diunduh oleh Puppeteer, dependency dari whatsapp-web.js).
 - Nomor tujuan ditulis dengan format kode negara tanpa tanda `+`, contoh: `6281234567890`.

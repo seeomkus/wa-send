@@ -1,5 +1,8 @@
 # WA Send
 
+**Versi:** 1.0.0
+**Dibuat oleh:** [seeomkus](https://seeomkus.com)
+
 Aplikasi sederhana untuk mengirim pesan WhatsApp: backend TypeScript (Express + whatsapp-web.js) dan frontend Vue 3. Berjalan di Windows maupun Linux.
 
 ## Instalasi (sekali di awal)
